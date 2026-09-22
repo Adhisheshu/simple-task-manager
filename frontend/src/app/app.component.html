@@ -1,0 +1,57 @@
+<main class="page">
+  <section class="container">
+    <header class="hero">
+      <p class="eyebrow">FULLSTACK SOFTWARE ENGINEER TEST</p>
+      <h1>Task Manager</h1>
+      <p class="subtitle">Create and keep track of your tasks.</p>
+    </header>
+
+    <section class="card">
+      <h2>Add a task</h2>
+
+      <form [formGroup]="taskForm" (ngSubmit)="submit()" novalidate>
+        <label for="title">Title <span>*</span></label>
+        <input id="title" type="text" formControlName="title"
+               placeholder="e.g. Prepare deployment notes"
+               [class.invalid]="isInvalid('title')" />
+        <small class="validation" *ngIf="isInvalid('title')">
+          Title is required and must be at most 200 characters.
+        </small>
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="4" formControlName="description"
+                  placeholder="Optional details..."
+                  [class.invalid]="isInvalid('description')"></textarea>
+        <small class="validation" *ngIf="isInvalid('description')">
+          Description must be at most 2000 characters.
+        </small>
+
+        <button type="submit" [disabled]="saving">
+          {{ saving ? 'Adding...' : 'Add Task' }}
+        </button>
+      </form>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </section>
+
+    <section class="tasks">
+      <div class="tasks-header">
+        <h2>Tasks</h2>
+        <span>{{ tasks.length }}</span>
+      </div>
+
+      <div class="state" *ngIf="loading">Loading tasks...</div>
+      <div class="state" *ngIf="!loading && tasks.length === 0">
+        No tasks yet. Add your first task above.
+      </div>
+
+      <article class="task" *ngFor="let task of tasks">
+        <div class="task-content">
+          <h3>{{ task.title }}</h3>
+          <p *ngIf="task.description">{{ task.description }}</p>
+        </div>
+        <time>{{ task.createdAt | date:'medium' }}</time>
+      </article>
+    </section>
+  </section>
+</main>
